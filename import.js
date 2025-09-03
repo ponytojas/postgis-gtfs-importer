@@ -39,7 +39,7 @@ const importGtfsAtomically = async (cfg) => {
 		gtfsDownloadUrl,
 		gtfsDownloadUserAgent,
 		tmpDir,
-		gtfstidyBeforeImport,
+		gtfscleanBeforeImport,
 		determineDbsToRetain,
 		continueOnFailureDeletingOldDb,
 		gtfsPostprocessingDPath,
@@ -56,7 +56,7 @@ const importGtfsAtomically = async (cfg) => {
 		gtfsDownloadUrl: null,
 		gtfsDownloadUserAgent: null,
 		tmpDir: process.env.GTFS_TMP_DIR || '/tmp/gtfs',
-		gtfstidyBeforeImport: null, // or `true` or `false`
+		gtfscleanBeforeImport: null, // or `true` or `false`
 		// If the previous (successful) import is among the latest two, keep the latest two. Otherwise keep the latest and the previous import.
 		// todo: add tests for this surprisingly complex logic
 		determineDbsToRetain: (oldDbs, prevImport) => {
@@ -215,8 +215,8 @@ const importGtfsAtomically = async (cfg) => {
 		if (schemaName !== null) {
 			_importEnv.GTFS_IMPORTER_SCHEMA = schemaName
 		}
-		if (gtfstidyBeforeImport !== null) {
-			_importEnv.GTFSTIDY_BEFORE_IMPORT = String(gtfstidyBeforeImport)
+		if (gtfscleanBeforeImport !== null) {
+			_importEnv.GTFSCLEANN_BEFORE_IMPORT = String(gtfscleanBeforeImport)
 		}
 		if (gtfsPostprocessingDPath !== null) {
 			_importEnv.GTFS_POSTPROCESSING_D_PATH = gtfsPostprocessingDPath

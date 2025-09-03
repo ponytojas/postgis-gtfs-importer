@@ -1,21 +1,13 @@
-# syntax=docker/dockerfile:1.9
-# ^ needed for ADD --checksum=…
-
-FROM node:20-bookworm-slim
+FROM node:22-bookworm-slim
 
 LABEL org.opencontainers.image.title="postgis-gtfs-importer"
-LABEL org.opencontainers.image.description="Imports GTFS data into a PostGIS database, using gtfstidy & gtfs-via-postgres."
-LABEL org.opencontainers.image.authors="MobiData-BW IPL contributors <mobidata-bw@nvbw.de>"
+LABEL org.opencontainers.image.description="Imports GTFS data into a PostGIS database, using gtfsclean & gtfs-via-postgres."
+LABEL org.opencontainers.image.authors="MobiData-BW IPL contributors <mobidata-bw@nvbw.de>. Forked by Daniel Villalobos (ponytojas)"
 LABEL org.opencontainers.image.documentation="https://github.com/mobidata-bw/postgis-gtfs-importer"
 
 WORKDIR /importer
 
 ENV TERM=xterm-256color
-
-# https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
 
 # curl is needed to download the GTFS
 # moreutils is needed for sponge
@@ -44,10 +36,9 @@ RUN \
 
 RUN \
 	curl -fsSL \
-	-H 'User-Agent: gtfs-importer (github.com/mobidata-bw/ipl-orchestration)' \
-	-o /usr/local/bin/gtfstidy \
-	"https://github.com/patrickbr/gtfstidy/releases/download/v0.2/gtfstidy.v0.2.$TARGETOS.$TARGETARCH" \
-	&& chmod +x /usr/local/bin/gtfstidy
+	-o /usr/local/bin/gtfsclean \
+	"https://github.com/public-transport/gtfsclean/releases/download/snapshot-5/gtfsclean" \
+	&& chmod +x /usr/local/bin/gtfsclean
 
 # todo: gtfs-via-postgres is Prosperity-dual-licensed, obtain a purely Apache-licensed version
 ADD package.json ./

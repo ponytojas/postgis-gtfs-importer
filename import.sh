@@ -34,72 +34,72 @@ if [[ -f '/etc/gtfs/preprocess.sh' ]]; then
 	/etc/gtfs/preprocess.sh "$gtfs_path"
 fi
 
-if [ "${GTFSTIDY_BEFORE_IMPORT:-true}" != false ]; then
-	print_bold "Tidying GTFS feed using gtfstidy."
+if [ "${GTFSCLEANN_BEFORE_IMPORT:-true}" != false ]; then
+	print_bold "Tidying GTFS feed using gtfsclean."
 	# Remove any leftovers from previous runs (e.g. pathways.txt/levels.txt)
 	rm -rf "$tidied_path"
 
 	set +x
-	gtfstidy_args=()
+	gtfsclean_args=()
 	if [ "$verbose" != false ]; then
-		gtfstidy_args+=('--show-warnings')
+		gtfsclean_args+=('--show-warnings')
 	fi
 
 	# fixing
-	if [ "${GTFSTIDY_FIX_ZIP:-true}" != false ]; then
-		gtfstidy_args+=('--fix-zip') # -z
+	if [ "${gtfsclean_FIX_ZIP:-true}" != false ]; then
+		gtfsclean_args+=('--fix-zip') # -z
 	fi
-	if [ "${GTFSTIDY_DEFAULT_ON_ERRS:-true}" != false ]; then
-		gtfstidy_args+=('--default-on-errs') # -e
+	if [ "${gtfsclean_DEFAULT_ON_ERRS:-true}" != false ]; then
+		gtfsclean_args+=('--default-on-errs') # -e
 	fi
-	if [ "${GTFSTIDY_DROP_ERRS:-true}" != false ]; then
-		gtfstidy_args+=('--drop-errs') # -D
+	if [ "${gtfsclean_DROP_ERRS:-true}" != false ]; then
+		gtfsclean_args+=('--drop-errs') # -D
 	fi
-	if [ "${GTFSTIDY_CHECK_NULL_COORDS:-true}" != false ]; then
-		gtfstidy_args+=('--check-null-coords') # -n
+	if [ "${gtfsclean_CHECK_NULL_COORDS:-true}" != false ]; then
+		gtfsclean_args+=('--check-null-coords') # -n
 	fi
 
 	# minimization
-	# Note: In later versions of gtfstidy, --keep-ids and --keep-additional-fields will be introduced.
-	if [ "${GTFSTIDY_MIN_SHAPES:-true}" != false ]; then
-		gtfstidy_args+=('--min-shapes') # -s
+	# Note: In later versions of gtfsclean, --keep-ids and --keep-additional-fields will be introduced.
+	if [ "${gtfsclean_MIN_SHAPES:-true}" != false ]; then
+		gtfsclean_args+=('--min-shapes') # -s
 	fi
-	if [ "${GTFSTIDY_MINIMIZE_SERVICES:-true}" != false ]; then
-		gtfstidy_args+=('--minimize-services') # -c
+	if [ "${gtfsclean_MINIMIZE_SERVICES:-true}" != false ]; then
+		gtfsclean_args+=('--minimize-services') # -c
 	fi
-	if [ "${GTFSTIDY_MINIMIZE_STOPTIMES:-true}" != false ]; then
-		gtfstidy_args+=('--minimize-stoptimes') # -T
+	if [ "${gtfsclean_MINIMIZE_STOPTIMES:-true}" != false ]; then
+		gtfsclean_args+=('--minimize-stoptimes') # -T
 	fi
-	if [ "${GTFSTIDY_DELETE_ORPHANS:-true}" != false ]; then
-		gtfstidy_args+=('--delete-orphans') # -O
+	if [ "${gtfsclean_DELETE_ORPHANS:-true}" != false ]; then
+		gtfsclean_args+=('--delete-orphans') # -O
 	fi
-	if [ "${GTFSTIDY_REMOVE_REDUNDANT_AGENCIES:-true}" != false ]; then
-		gtfstidy_args+=('--remove-red-agencies') # -A
+	if [ "${gtfsclean_REMOVE_REDUNDANT_AGENCIES:-true}" != false ]; then
+		gtfsclean_args+=('--remove-red-agencies') # -A
 	fi
-	if [ "${GTFSTIDY_REMOVE_REDUNDANT_ROUTES:-true}" != false ]; then
-		gtfstidy_args+=('--remove-red-routes') # -R
+	if [ "${gtfsclean_REMOVE_REDUNDANT_ROUTES:-true}" != false ]; then
+		gtfsclean_args+=('--remove-red-routes') # -R
 	fi
-	if [ "${GTFSTIDY_REMOVE_REDUNDANT_SERVICES:-true}" != false ]; then
-		gtfstidy_args+=('--remove-red-services') # -C
+	if [ "${gtfsclean_REMOVE_REDUNDANT_SERVICES:-true}" != false ]; then
+		gtfsclean_args+=('--remove-red-services') # -C
 	fi
-	if [ "${GTFSTIDY_REMOVE_REDUNDANT_SHAPES:-true}" != false ]; then
-		gtfstidy_args+=('--remove-red-shapes') # -S
+	if [ "${gtfsclean_REMOVE_REDUNDANT_SHAPES:-true}" != false ]; then
+		gtfsclean_args+=('--remove-red-shapes') # -S
 	fi
-	if [ "${GTFSTIDY_REMOVE_REDUNDANT_STOPS:-true}" != false ]; then
-		gtfstidy_args+=('--remove-red-stops') # -P
+	if [ "${gtfsclean_REMOVE_REDUNDANT_STOPS:-true}" != false ]; then
+		gtfsclean_args+=('--remove-red-stops') # -P
 	fi
-	if [ "${GTFSTIDY_REMOVE_REDUNDANT_TRIPS:-true}" != false ]; then
-		gtfstidy_args+=('--remove-red-trips') # -I
+	if [ "${gtfsclean_REMOVE_REDUNDANT_TRIPS:-true}" != false ]; then
+		gtfsclean_args+=('--remove-red-trips') # -I
 	fi
 
 	# todo: allow configuring additional flags
 	set -x
 
-	gtfstidy \
-		"${gtfstidy_args[@]}" \
+	gtfsclean \
+		"${gtfsclean_args[@]}" \
 		-o "$tidied_path" \
 		"$gtfs_path" \
-		2>&1 | tee "$gtfs_tmp_dir/tidied.gtfs.gtfstidy-log.txt"
+		2>&1 | tee "$gtfs_tmp_dir/tidied.gtfs.gtfsclean-log.txt"
 	gtfs_path="$tidied_path"
 fi
 
